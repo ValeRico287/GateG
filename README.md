@@ -1,4 +1,144 @@
-# Getting Started with Create React App
+# GateG - Sistema de Monitoreo de Empleados
+
+Una aplicación web full-stack para monitoreo de productividad de empleados con gamificación.
+
+## Estructura del Proyecto
+
+```
+GateG/
+├── src/                    # Frontend React + TypeScript
+├── server/                 # Backend Node.js + Express + TypeScript
+├── server/schema.sql       # Esquema de base de datos MySQL
+└── README.md
+```
+
+## Tecnologías
+
+### Frontend
+- React 19 + TypeScript
+- Material-UI (MUI)
+- React Router DOM
+
+### Backend
+- Node.js + Express + TypeScript
+- MySQL con mysql2
+- JWT para autenticación
+- bcrypt para hashing de PINs
+
+## Configuración
+
+### 1. Base de Datos
+
+Crea una base de datos MySQL llamada `gateg` y ejecuta el schema:
+
+```bash
+mysql -u root -p
+CREATE DATABASE gateg;
+USE gateg;
+source server/schema.sql;
+```
+
+### 2. Backend
+
+```bash
+cd server
+npm install
+cp .env.example .env
+# Edita .env con tus credenciales de MySQL
+npm run dev
+```
+
+El servidor se ejecutará en `http://localhost:4000`
+
+### 3. Frontend
+
+```bash
+# En la raíz del proyecto
+npm install
+cp .env.example .env
+# El .env ya está configurado para apuntar al backend
+npm start
+```
+
+El frontend se ejecutará en `http://localhost:3000`
+
+## Usuarios de Prueba
+
+El schema incluye usuarios predefinidos (PIN: 1234 para todos):
+
+- `EMP001` - Ana García (Empleado)
+- `EMP002` - Carlos López (Empleado) 
+- `SUP001` - María Rodríguez (Supervisor)
+- `ADM001` - Juan Martínez (Administrador)
+
+## API Endpoints
+
+### Autenticación
+- `POST /api/auth/login` - Login con employee_code y PIN
+
+### Empleados
+- `GET /api/employee/profile` - Perfil del empleado autenticado
+- `GET /api/tasks` - Tareas disponibles para el empleado
+
+## Funcionalidades
+
+### Implementadas
+- ✅ Login con códigos de empleado y PIN
+- ✅ Autenticación JWT
+- ✅ Base de datos MySQL completa
+- ✅ APIs básicas para empleados y tareas
+
+### Por Implementar
+- Dashboard con métricas en tiempo real
+- Sistema de work logs (iniciar/completar tareas)
+- Gamificación (puntos, niveles, badges)
+- Panel de administrador
+- Reportes y analíticas
+
+## Desarrollo
+
+### Ejecutar en modo desarrollo
+
+Terminal 1 (Backend):
+```bash
+cd server
+npm run dev
+```
+
+Terminal 2 (Frontend):
+```bash
+npm start
+```
+
+### Compilar para producción
+
+```bash
+# Backend
+cd server
+npm run build
+npm start
+
+# Frontend
+npm run build
+```
+
+## Esquema de Base de Datos
+
+La base de datos incluye las siguientes tablas:
+- `employees` - Información de empleados
+- `teams` - Equipos de trabajo
+- `task_definitions` - Definiciones de tareas
+- `work_logs` - Registros de trabajo
+- `gamification_levels` - Niveles de gamificación
+- `badges` - Insignias del sistema
+- `employee_badges` - Insignias ganadas por empleados
+- `feedback_log` - Retroalimentación y mensajes
+
+Ver `server/schema.sql` para el esquema completo.
+
+---
+
+## Información Original de Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
