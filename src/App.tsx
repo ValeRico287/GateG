@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import MenuAppBar from './navbar/page';
 import LoginPage from './login/page';
 import DashboardPage from './dashboard/page';
+import TaskManagementPage from './taskManagement/page';
 import Slides from './slides/page';
 import Home from './home/page';
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/slides" element={<Slides />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/task-management" element={<TaskManagementPage />} />
         </Routes>
       </div>
     </Router>
