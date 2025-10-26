@@ -11,7 +11,11 @@ import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 
-export default function MenuAppBar() {
+interface MenuAppBarProps {
+  onMenuClick?: () => void;
+}
+
+export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
@@ -28,7 +32,13 @@ export default function MenuAppBar() {
         }}
       >
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
+          <IconButton 
+            size="large" 
+            edge="start" 
+            color="inherit" 
+            onClick={onMenuClick}
+            sx={{ mr: 2 }}
+          >
             <MenuIcon />
           </IconButton>
 
