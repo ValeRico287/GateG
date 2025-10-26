@@ -33,13 +33,19 @@ interface MenuAppBarProps {
 
 export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [localDrawerOpen, setLocalDrawerOpen] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
-  const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
+  const handleDrawerToggle = () => {
+    if (onMenuClick) {
+      onMenuClick();
+    } else {
+      setLocalDrawerOpen(!localDrawerOpen);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('gateg_token');
@@ -70,7 +76,11 @@ export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
             <ListItemButton 
               onClick={() => {
                 navigate(item.path);
-                setDrawerOpen(false);
+                if (onMenuClick) {
+                  onMenuClick();
+                } else {
+                  setLocalDrawerOpen(false);
+                }
               }}
             >
               <ListItemIcon sx={{ color: '#001f4d' }}>
@@ -98,15 +108,8 @@ export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
             size="large" 
             edge="start" 
             color="inherit" 
-            onClick={onMenuClick}
-            sx={{ mr: 2 }}
-          >
-          <IconButton 
-            size="large" 
-            edge="start" 
-            color="inherit" 
-            sx={{ mr: 2 }}
             onClick={handleDrawerToggle}
+            sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
@@ -188,8 +191,8 @@ export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
       {/* Drawer lateral */}
       <Drawer
         anchor="left"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        open={localDrawerOpen}
+        onClose={() => setLocalDrawerOpen(false)}
       >
         {drawer}
       </Drawer>

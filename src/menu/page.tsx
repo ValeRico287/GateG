@@ -36,7 +36,7 @@ export default function MenuDrawer({ isOpen = false, onClose, onOpen }: MenuDraw
 
   const menuOptions: MenuOption[] = [
     {
-      text: "Inicio",
+      text: "Home",
       path: "/",
       icon: <HomeIcon sx={{ color: "#001f4d" }} />,
     },
@@ -46,17 +46,17 @@ export default function MenuDrawer({ isOpen = false, onClose, onOpen }: MenuDraw
       icon: <DashboardIcon sx={{ color: "#001f4d" }} />,
     },
     {
-      text: "Entrenamiento",
+      text: "Training",
       path: "/slides",
       icon: <SchoolIcon sx={{ color: "#001f4d" }} />,
     },
     {
-      text: "Seguimiento de Tareas",
+      text: "Task Tracking",
       path: "/taskTracking",
       icon: <TaskIcon sx={{ color: "#001f4d" }} />,
     },
     {
-      text: "Iniciar Sesión",
+      text: "Sign in",
       path: "/login",
       icon: <LoginIcon sx={{ color: "#001f4d" }} />,
     },

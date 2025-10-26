@@ -40,14 +40,6 @@ export default function DashboardPage() {
 	const loadDashboardData = async () => {
 		try {
 			setLoading(true);
-			
-			// Verificar si está autenticado
-			if (!apiClient.isAuthenticated()) {
-				navigate('/login');
-				return;
-			}
-
-			// Cargar datos del empleado y tareas en paralelo
 			const [employeeData, tasksData] = await Promise.all([
 				apiClient.getProfile(),
 				apiClient.getTasks()
@@ -58,12 +50,6 @@ export default function DashboardPage() {
 		} catch (err: any) {
 			console.error('Error loading dashboard:', err);
 			setError(err.message || 'Error cargando datos');
-			
-			// Si hay error de autenticación, redirigir al login
-			if (err.message?.includes('Token') || err.message?.includes('401')) {
-				apiClient.logout();
-				navigate('/login');
-			}
 		} finally {
 			setLoading(false);
 		}
@@ -210,7 +196,6 @@ export default function DashboardPage() {
 				))}
 			</Box>
 
-					{/* Trends and Feedback */}
 					<Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
 						<Box sx={{ width: { xs: "100%", md: "50%" } }}>
 							<Card sx={{ borderRadius: 3, boxShadow: "0 4px 10px rgba(0,0,0,0.1)", height: "100%" }}>
