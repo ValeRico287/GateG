@@ -5,6 +5,7 @@ import MenuAppBar from './navbar/page';
 import MenuDrawer from './menu/page';
 import LoginPage from './login/page';
 import DashboardPage from './dashboard/page';
+import TaskManagementPage from './taskManagement/page';
 import Slides from './slides/page';
 import Home from './home/page';
 import TaskTrackingPage from './taskTracking/page';

@@ -12,31 +12,45 @@ import {
   Typography,
   IconButton,
   Paper,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from '../services/api';
 
 export default function LoginPage() {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [employeeCode, setEmployeeCode] = React.useState('');
+  const [pin, setPin] = React.useState('');
+  const [showPin, setShowPin] = React.useState(false);
   const [remember, setRemember] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    if (email === 'admin@test.com' && password === '1234') {
-      alert('Inicio de sesión exitoso ✅');
-      navigate('/dashboard');
-    } else {
-      alert('❌ Credenciales incorrectas');
+    try {
+      const result = await apiClient.login(employeeCode, pin);
+      
+      if (result.success) {
+        navigate('/dashboard');
+      } else {
+        setError('Credenciales incorrectas');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error de conexión al servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowPin = () => setShowPin((show) => !show);
 
   return (
     <Box
@@ -61,17 +75,24 @@ export default function LoginPage() {
           Iniciar sesión
         </Typography>
 
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         <Box component="form" onSubmit={handleLogin}>
           <TextField
-            label="Email"
-            name="email"
-            type="email"
+            label="Código de Empleado"
+            name="employeeCode"
+            type="text"
             fullWidth
             required
             size="small"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={employeeCode}
+            onChange={(e) => setEmployeeCode(e.target.value)}
             margin="normal"
+            placeholder="EMP001, SUP001, ADM001..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -82,29 +103,30 @@ export default function LoginPage() {
           />
 
           <FormControl fullWidth variant="outlined" size="small" margin="normal">
-            <InputLabel htmlFor="outlined-adornment-password">
-              Contraseña
+            <InputLabel htmlFor="outlined-adornment-pin">
+              PIN
             </InputLabel>
             <OutlinedInput
-              id="outlined-adornment-password"
-              type={showPassword ? 'text' : 'password'}
-              name="password"
+              id="outlined-adornment-pin"
+              type={showPin ? 'text' : 'password'}
+              name="pin"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+              placeholder="1234"
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
+                    aria-label="toggle pin visibility"
+                    onClick={handleClickShowPin}
                     edge="end"
                     size="small"
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPin ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
-              label="Contraseña"
+              label="PIN"
             />
           </FormControl>
 
@@ -125,10 +147,19 @@ export default function LoginPage() {
             variant="contained"
             color="primary"
             fullWidth
+            disabled={loading}
             sx={{ mt: 2 }}
           >
-            Entrar
+            {loading ? <CircularProgress size={24} /> : 'Entrar'}
           </Button>
+
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Typography variant="body2" color="textSecondary">
+              Códigos de prueba: EMP001, EMP002, SUP001, ADM001
+              <br />
+              PIN: 1234 (para todos)
+            </Typography>
+          </Box>
         </Box>
       </Paper>
     </Box>

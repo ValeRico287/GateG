@@ -9,7 +9,23 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  Home as HomeIcon,
+  Login as LoginIcon,
+  Dashboard as DashboardIcon,
+  Assignment as TaskIcon,
+  Slideshow as SlidesIcon,
+  Person as PersonIcon,
+  ExitToApp as LogoutIcon
+} from '@mui/icons-material';
 
 interface MenuAppBarProps {
   onMenuClick?: () => void;
@@ -17,10 +33,56 @@ interface MenuAppBarProps {
 
 export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
+  const handleDrawerToggle = () => setDrawerOpen(!drawerOpen);
+
+  const handleLogout = () => {
+    localStorage.removeItem('gateg_token');
+    localStorage.removeItem('gateg_employee');
+    navigate('/');
+    handleClose();
+  };
+
+  const menuItems = [
+    { text: 'Inicio', icon: <HomeIcon />, path: '/' },
+    { text: 'Login', icon: <LoginIcon />, path: '/login' },
+    { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+    { text: 'Gestión Tareas', icon: <TaskIcon />, path: '/task-management' },
+    { text: 'Slides', icon: <SlidesIcon />, path: '/slides' },
+  ];
+
+  const drawer = (
+    <Box sx={{ width: 250 }} role="presentation">
+      <Box sx={{ p: 2, bgcolor: '#001f4d', color: 'white' }}>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Packing Monitor
+        </Typography>
+      </Box>
+      <Divider />
+      <List>
+        {menuItems.map((item) => (
+          <ListItem key={item.text} disablePadding>
+            <ListItemButton 
+              onClick={() => {
+                navigate(item.path);
+                setDrawerOpen(false);
+              }}
+            >
+              <ListItemIcon sx={{ color: '#001f4d' }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -38,6 +100,13 @@ export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
             color="inherit" 
             onClick={onMenuClick}
             sx={{ mr: 2 }}
+          >
+          <IconButton 
+            size="large" 
+            edge="start" 
+            color="inherit" 
+            sx={{ mr: 2 }}
+            onClick={handleDrawerToggle}
           >
             <MenuIcon />
           </IconButton>
@@ -60,6 +129,38 @@ export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
             Login
           </Button>
 
+          <Button
+            color="inherit"
+            onClick={() => navigate('/dashboard')}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 500,
+              mr: 1,
+              backgroundColor: location.pathname === '/dashboard' ? 'rgba(255,255,255,0.1)' : 'transparent',
+              '&:hover': {
+                backgroundColor: 'rgba(255,255,255,0.1)',
+              },
+            }}
+          >
+            Dashboard
+          </Button>
+
+          <Button
+            color="inherit"
+            onClick={() => navigate('/task-management')}
+            sx={{
+              textTransform: 'none',
+              fontWeight: 500,
+              mr: 1,
+              backgroundColor: location.pathname === '/task-management' ? 'rgba(255,255,255,0.1)' : 'transparent',
+              '&:hover': {
+                backgroundColor: 'rgba(255,255,255,0.1)',
+              },
+            }}
+          >
+            Gestión Tareas
+          </Button>
+
           <div>
             <IconButton size="large" onClick={handleMenu} color="inherit">
               <AccountCircle />
@@ -71,12 +172,27 @@ export default function MenuAppBar({ onMenuClick }: MenuAppBarProps = {}) {
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My Account</MenuItem>
+              <MenuItem onClick={() => { navigate('/dashboard'); handleClose(); }}>
+                <PersonIcon sx={{ mr: 1 }} />
+                Mi Perfil
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <LogoutIcon sx={{ mr: 1 }} />
+                Cerrar Sesión
+              </MenuItem>
             </Menu>
           </div>
         </Toolbar>
       </AppBar>
+
+      {/* Drawer lateral */}
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        {drawer}
+      </Drawer>
     </Box>
   );
 }
